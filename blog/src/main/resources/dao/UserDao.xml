@@ -11,6 +11,19 @@
     </collection>
   </resultMap>
 
+  <insert id="addUser">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+    INSERT INTO user (name, password, email, activated)
+    VALUES (#{username}, #{password}, #{email}, #{activated})
+  </insert>
+
+  <insert id="addUserRole">
+    INSERT INTO user_auth (user_id, auth_id)
+    VALUES (#{userId}, #{roleID})
+  </insert>
+
   <select id="getUserByName" resultMap="userDetails">
     SELECT user.name   as username,
            user.password,
@@ -37,5 +50,14 @@
                      on user.id = user_auth.user_id
            left join author on user_auth.auth_id = author.id
     where user.id = #{id}
+  </select>
+
+  <select id="getRoleIdsByNames" resultType="java.lang.Integer" parameterType="java.util.List">
+    SELECT id
+    FROM author
+    WHERE role in
+    <foreach collection="list" item="name" open="(" separator="," close=")">
+      #{name}
+    </foreach>
   </select>
 </mapper>
