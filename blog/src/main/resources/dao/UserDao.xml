@@ -36,8 +36,6 @@
            left join user_auth
                      on user.id = user_auth.user_id
            left join author on user_auth.auth_id = author.id
-    where user.name = #{id}
+    where user.id = #{id}
   </select>
-
-
 </mapper>

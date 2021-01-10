@@ -14,5 +14,7 @@ public class BlogApplication {
     var userDao = app.getBean(UserDao.class);
     var user = userDao.getUserByName("王二");
     System.out.println(user);
+    var user2 = userDao.getUserById(2);
+    System.out.println(user2);
   }
 }

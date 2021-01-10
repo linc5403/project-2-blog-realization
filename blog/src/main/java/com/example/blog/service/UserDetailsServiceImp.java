@@ -1,6 +1,7 @@
 package com.example.blog.service;
 
 import com.example.blog.bean.User;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Component
+@Primary
 public class UserDetailsServiceImp implements UserDetailsService {
   private final UserService userService;
 
