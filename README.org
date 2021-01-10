@@ -1,3 +1,17 @@
+* MySQL
+
+** 外键
+
+   #+begin_src sql
+     CREATE TABLE user_auth (
+	    id INT PRIMARY KEY AUTO_INCREMENT,
+	    user_id INT UNSIGNED NOT NULL,
+	    auth_id INT NOT NULL,
+	    FOREIGN KEY (user_id) REFERENCES user(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	    FOREIGN KEY (auth_id) REFERENCES author(id) ON DELETE CASCADE ON UPDATE CASCADE
+	    );
+   #+end_src
+
 * Spring Security
 * Redis
 * RabbitMQ
