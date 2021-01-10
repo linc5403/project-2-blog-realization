@@ -6,5 +6,6 @@ public class Blog {
   private Integer id;
   private String title;
   private String content;
-  private Date createdAt;
+  private Date createdTime;
+  private User user;
 }

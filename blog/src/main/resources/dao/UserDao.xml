@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.dao.UserDao">
+
+  <resultMap id="userDetails" type="com.example.blog.bean.User" autoMapping="true">
+    <id property="id" column="id"/>
+    <collection property="roles" ofType="java.lang.String">
+      <id column="author_role"/>
+    </collection>
+  </resultMap>
+
+  <select id="getUserByName" resultMap="userDetails">
+    SELECT user.name   as username,
+           user.password,
+           user.activated,
+           user.email,
+           user.id,
+           author.role as author_role
+    FROM user
+           left join user_auth
+                     on user.id = user_auth.user_id
+           left join author on user_auth.auth_id = author.id
+    where user.name = #{username}
+  </select>
+
+  <select id="getUserById" resultMap="userDetails">
+    SELECT user.name   as username,
+           user.password,
+           user.activated,
+           user.email,
+           user.id,
+           author.role as author_role
+    FROM user
+           left join user_auth
+                     on user.id = user_auth.user_id
+           left join author on user_auth.auth_id = author.id
+    where user.name = #{id}
+  </select>
+
+
+</mapper>
