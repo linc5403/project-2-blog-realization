@@ -38,11 +38,11 @@ public class RegisterController {
 
     Boolean r = userService.addUser(user);
     if (r) {
-      return ResponseEntity.ok("OK");
-    } else {
       // 通知用户注册的事件
       RegisterEvent registerEvent = new RegisterEvent(this, user);
       publisher.publishEvent(registerEvent);
+      return ResponseEntity.ok("OK");
+    } else {
       // 应该返回更为详细的原因
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户名或电子邮件已存在");
     }

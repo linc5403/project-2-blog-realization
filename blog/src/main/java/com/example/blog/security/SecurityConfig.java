@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .failureHandler(failureHandler());
 
     // 配置访问权限
-    http.authorizeRequests().antMatchers("/blog/**").hasRole("User");
+    http.authorizeRequests().antMatchers("/register").permitAll();
+    http.authorizeRequests().antMatchers("/**").hasRole("User");
 
     http.addFilter(new JWTLoginAuthenticationFilter(authenticationManager()))
         .addFilter(new JWTTokenAuthenticationFilter(authenticationManager()));
