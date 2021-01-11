@@ -1,4 +1,4 @@
-package com.example.blog.config;
+package com.example.blog.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 配置访问权限
     http.authorizeRequests().antMatchers("/blog/**").hasRole("User");
+
+    http.addFilter(new JWTLoginAuthenticationFilter(authenticationManager()))
+        .addFilter(new JWTTokenAuthenticationFilter(authenticationManager()));
+
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   private AuthenticationSuccessHandler successHandler() {
