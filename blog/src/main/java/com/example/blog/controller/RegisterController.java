@@ -24,11 +24,18 @@ public class RegisterController {
   }
 
   @PostMapping("/register")
-  ResponseEntity<?> register(@RequestParam User user) {
+  ResponseEntity<?> register(
+      @RequestParam String username, @RequestParam String password, @RequestParam String email) {
+
+    var user = new User();
+    user.setUsername(username);
+    user.setEmail(email);
+    user.setPassword(password);
     user.setActivated(false);
 
     // 注册用户的接口统一加上User的角色
     user.setRoles(Collections.singletonList("User"));
+
     Boolean r = userService.addUser(user);
     if (r) {
       return ResponseEntity.ok("OK");

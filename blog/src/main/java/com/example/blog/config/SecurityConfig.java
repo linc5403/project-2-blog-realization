@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableWebSecurity
 @Configuration
@@ -28,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    *
    * 主要是配置public的endpoint, 以及对应url的权限
    *
-   * @param http
-   * @throws Exception
+   * @param http - security config
+   * @throws Exception - other exceptions
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -38,11 +40,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 去使能httpBasic认证
     http.httpBasic().disable();
 
-    // 配置从哪个url的请求中获取用户名, 密码并进行认证
-    http.formLogin().loginProcessingUrl("/login");
+    http.formLogin()
+        // 配置从哪个url的请求中获取用户名, 密码并进行认证
+        //        .loginProcessingUrl("/login")
+        .successHandler(successHandler())
+        .failureHandler(failureHandler());
 
     // 配置访问权限
-    http.authorizeRequests().antMatchers("/blog/**").hasRole("ADMIN");
+    http.authorizeRequests().antMatchers("/blog/**").hasRole("User");
+  }
+
+  private AuthenticationSuccessHandler successHandler() {
+    return (httpServletRequest, httpServletResponse, authentication) -> {
+      httpServletResponse.getWriter().append("OK");
+      httpServletResponse.setStatus(200);
+    };
+  }
+
+  private AuthenticationFailureHandler failureHandler() {
+    return (httpServletRequest, httpServletResponse, e) -> {
+      httpServletResponse.getWriter().append("Authentication failure");
+      httpServletResponse.setStatus(401);
+    };
   }
 
   @Override

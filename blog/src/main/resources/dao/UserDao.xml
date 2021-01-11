@@ -21,7 +21,7 @@
 
   <insert id="addUserRole">
     INSERT INTO user_auth (user_id, auth_id)
-    VALUES (#{userId}, #{roleID})
+    VALUES (#{userId}, #{roleId})
   </insert>
 
   <select id="getUserByName" resultMap="userDetails">
