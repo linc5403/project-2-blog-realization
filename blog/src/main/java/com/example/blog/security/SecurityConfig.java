@@ -41,17 +41,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // 去使能httpBasic认证
     http.httpBasic().disable();
 
-    http.formLogin()
-        // 配置从哪个url的请求中获取用户名, 密码并进行认证
-        //        .loginProcessingUrl("/login")
-        .successHandler(successHandler())
-        .failureHandler(failureHandler());
+    // http.formLogin()
+    // 配置从哪个url的请求中获取用户名, 密码并进行认证
+    //        .loginProcessingUrl("/login")
+    //        .successHandler(successHandler())
+    //        .failureHandler(failureHandler());
 
     // 配置访问权限
     http.authorizeRequests().antMatchers("/register").permitAll();
-    http.authorizeRequests().antMatchers("/**").hasRole("User");
-    http.authorizeRequests().antMatchers("/**").hasAuthority("ROLE_User");
     http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
+    http.authorizeRequests().antMatchers("/**").hasRole("USER");
+    //    http.authorizeRequests().antMatchers("/**").hasAuthority("ROLE_USER");
 
     http.addFilter(new JWTLoginAuthenticationFilter(authenticationManager()))
         .addFilter(new JWTTokenAuthenticationFilter(authenticationManager()));

@@ -16,6 +16,7 @@
 
 ** JWT
 *** 生成Token发送给客户端
+
 *** 验证Token并生成Authentication对象
 
 * Redis
