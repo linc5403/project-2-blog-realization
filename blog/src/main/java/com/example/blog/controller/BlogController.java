@@ -19,6 +19,7 @@ public class BlogController {
 
   @GetMapping("/blog/{id}")
   ResponseEntity<?> getBlog(@PathVariable Integer id) {
+
     Blog blog = blogService.getBlogDetails(id);
     if (blog == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such blog: " + id);

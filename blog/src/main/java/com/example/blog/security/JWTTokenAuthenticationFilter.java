@@ -39,9 +39,10 @@ public class JWTTokenAuthenticationFilter extends BasicAuthenticationFilter {
       return;
     }
 
+    // 从Token中解析出AuthenticationToken, 并放入SecurityContextHolder
     UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
-
     SecurityContextHolder.getContext().setAuthentication(authentication);
+
     chain.doFilter(req, res);
   }
 
