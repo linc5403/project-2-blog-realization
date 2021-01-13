@@ -31,12 +31,11 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
         List<GrantedAuthority> grantedAuthorities = new LinkedList<>();
 
-        for (String auth : user.getRoles()) {
-          grantedAuthorities.add(
-              () -> {
-                return "ROLE_" + auth;
-              });
-        }
+        user.getRoles()
+            .forEach(
+                a -> {
+                  grantedAuthorities.add(() -> "ROLE_" + a);
+                });
         return grantedAuthorities;
       }
 
