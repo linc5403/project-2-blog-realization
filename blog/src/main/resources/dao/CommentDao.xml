@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.dao.CommentDao">
+  <resultMap id="commentMap" type="com.example.blog.bean.Comment" autoMapping="true">
+    <id property="id" column="id"/>
+    <association property="commenter"
+                 resultMap="com.example.blog.dao.UserDao.userSimpleMap"
+                 columnPrefix="commenter_" autoMapping="true">
+      <id property="id" column="id"/>
+    </association>
+  </resultMap>
+</mapper>

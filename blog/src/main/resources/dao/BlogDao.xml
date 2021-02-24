@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.dao.BlogDao">
+
+  <resultMap id="blogDetails" type="com.example.blog.bean.Blog" autoMapping="true">
+    <id property="id" column="id"/>
+    <association property="author" resultMap="com.example.blog.dao.UserDao.userSimpleMap"
+                 columnPrefix="author_" autoMapping="true"/>
+    <collection property="comments" resultMap="com.example.blog.dao.CommentDao.commentMap"
+                columnPrefix="comment_" autoMapping="true">
+      <id property="id" column="id"/>
+    </collection>
+  </resultMap>
+
+  <select id="getBlogById" resultMap="blogDetails" parameterType="int">
+    SELECT blog.id,
+           blog.title,
+           blog.content,
+           blog.created_time,
+           blog.user_id,
+           user.id              as author_id,
+           user.name            as author_username,
+           user.password        as author_password,
+           user.email           as author_email,
+           comment.id           as comment_id,
+           comment.content      as comment_content,
+           comment.created_time as comment_created_time,
+           comment.blog_id      as comment_blog_id,
+           commenter.id         as comment_commenter_id,
+           commenter.name       as comment_commenter_username,
+           commenter.password   as comment_commenter_password,
+           commenter.email      as comment_commenter_email
+    from (blog
+           left join user on blog.user_id = user.id
+           left join comment on blog.id = comment.blog_id
+           left join user as commenter on comment.user_id = commenter.id)
+    where blog.id = #{id}
+  </select>
+</mapper>

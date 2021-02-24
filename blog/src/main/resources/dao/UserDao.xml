@@ -4,11 +4,17 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.blog.dao.UserDao">
 
-  <resultMap id="userDetails" type="com.example.blog.bean.User" autoMapping="true">
+  <resultMap id="userDetailsMap" type="com.example.blog.bean.User" autoMapping="true">
     <id property="id" column="id"/>
     <collection property="roles" ofType="java.lang.String">
       <id column="author_role"/>
     </collection>
+  </resultMap>
+
+  <resultMap id="userSimpleMap" type="com.example.blog.bean.User" autoMapping="false">
+    <id property="id" column="id"/>
+    <result property="email" column="email"/>
+    <result property="username" column="username"/>
   </resultMap>
 
   <insert id="addUser">
@@ -24,7 +30,7 @@
     VALUES (#{userId}, #{roleId})
   </insert>
 
-  <select id="getUserByName" resultMap="userDetails">
+  <select id="getUserByName" resultMap="userDetailsMap">
     SELECT user.name   as username,
            user.password,
            user.activated,
@@ -38,7 +44,7 @@
     where user.name = #{username}
   </select>
 
-  <select id="getUserById" resultMap="userDetails">
+  <select id="getUserById" resultMap="userDetailsMap">
     SELECT user.name   as username,
            user.password,
            user.activated,
