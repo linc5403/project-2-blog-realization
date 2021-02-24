@@ -1,6 +1,8 @@
 package com.example.blog;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,22 +16,12 @@ public class BlogApplication {
 
   public static void main(String[] args) {
     var app = SpringApplication.run(BlogApplication.class, args);
-    //    var userDao = app.getBean(UserDao.class);
-    //    var user = userDao.getUserByName("王二");
-    //    log.info(user.toString());
-    //    var user2 = userDao.getUserById(2);
-    //    log.info(user2.toString());
 
-    /*
-    user.setUsername("liSi");
-    user.setEmail("liSi@abc.com");
-    Integer r = userDao.addUser(user);
-    log.info(r.toString());
-    log.info(user.toString());
-     */
-
-    //    List<Integer> ids = userDao.getRoleIdsByNames(Arrays.asList("User", "Admin"));
-    //    log.info(ids.toString());
-
+    //    MysqlConnectionPoolDataSource mysqlConnectionPoolDataSource =
+    //        new MysqlConnectionPoolDataSource();
+    SqlSessionFactory factory = app.getBean(SqlSessionFactory.class);
+    System.out.println(factory);
+    MysqlDataSource dataSource = app.getBean(MysqlDataSource.class);
+    System.out.println(dataSource);
   }
 }
