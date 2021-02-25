@@ -2,6 +2,7 @@ package com.example.blog;
 
 import com.example.blog.dao.BlogDao;
 import com.example.blog.dao.UserDao;
+import com.example.blog.utils.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +16,7 @@ import java.util.Date;
 @Slf4j
 public class BlogApplication {
 
-  public static void main(String[] args) throws ParseException {
+  public static void main(String[] args) throws ParseException, IllegalAccessException {
     var app = SpringApplication.run(BlogApplication.class, args);
     var userDao = app.getBean(UserDao.class);
     var user = userDao.getUserByName("王二");
@@ -23,12 +24,14 @@ public class BlogApplication {
     var user2 = userDao.getUserById(2);
     log.debug(user2.toString());
     var blogDao = app.getBean(BlogDao.class);
-    var blog1 = blogDao.getBlogById(13);
+    var blog1 = blogDao.getBlogById(220);
     log.debug(blog1.toString());
     var blogs = blogDao.findBlogsByReplier("aa", 1, 2);
     System.out.println(blogs);
     blogs = blogDao.findBlogsByDate(new Date(), 0, 5);
     System.out.println(blogs.size());
+    var mapper = MapperUtil.removeNullFields(blog1);
+    System.out.println(mapper);
 
     /*
     user.setUsername("liSi");

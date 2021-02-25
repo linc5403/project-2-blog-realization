@@ -21,7 +21,7 @@ public class BlogController {
   }
 
   @GetMapping("blog/{id}")
-  ResponseEntity<?> getBlog(@PathVariable Integer id) {
+  ResponseEntity<?> getBlog(@PathVariable Integer id) throws IllegalAccessException {
 
     Blog blog = blogService.getBlogDetails(id);
     if (blog == null) {
