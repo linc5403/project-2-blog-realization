@@ -23,7 +23,7 @@ public class RegisterController {
     this.publisher = publisher;
   }
 
-  @PostMapping("/register")
+  @PostMapping("/api/register")
   ResponseEntity<?> register(
       @RequestParam String username, @RequestParam String password, @RequestParam String email) {
 

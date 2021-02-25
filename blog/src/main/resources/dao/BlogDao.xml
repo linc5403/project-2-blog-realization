@@ -14,6 +14,20 @@
     </collection>
   </resultMap>
 
+  <insert id="addBlog">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+    INSERT INTO blog (title, content, user_id) VALUES (#{title}, #{content}, #{author.id})
+  </insert>
+
+  <update id="updateBlog">
+    UPDATE blog
+    SET title=#{title},
+        content=#{content}
+    where id = #{id}
+  </update>
+
   <select id="getBlogById" resultMap="blogDetails" parameterType="int">
     SELECT blog.id,
            blog.title,
@@ -38,4 +52,10 @@
            left join user as commenter on comment.user_id = commenter.id)
     where blog.id = #{id}
   </select>
+
+  <delete id="deleteBlogById" parameterType="int">
+    DELETE
+    FROM blog
+    WHERE id = #{id}
+  </delete>
 </mapper>

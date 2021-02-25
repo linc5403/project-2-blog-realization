@@ -20,7 +20,7 @@ public class BlogApplication {
     var user2 = userDao.getUserById(2);
     log.debug(user2.toString());
     var blogDao = app.getBean(BlogDao.class);
-    var blog1 = blogDao.getBlogById(19);
+    var blog1 = blogDao.getBlogById(13);
     log.debug(blog1.toString());
 
     /*

@@ -42,12 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.formLogin()
         // 配置从哪个url的请求中获取用户名, 密码并进行认证
-        //        .loginProcessingUrl("/login")
+        .loginProcessingUrl("/login")
         .successHandler(successHandler())
         .failureHandler(failureHandler());
 
     // 配置访问权限
-    http.authorizeRequests().antMatchers("/blog/**").hasRole("User");
+    http.authorizeRequests().anyRequest().permitAll();
+    //    http.authorizeRequests().antMatchers("/blog/**").hasRole("User");
   }
 
   private AuthenticationSuccessHandler successHandler() {
