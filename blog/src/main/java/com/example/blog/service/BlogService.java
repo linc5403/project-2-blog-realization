@@ -4,6 +4,9 @@ import com.example.blog.bean.Blog;
 import com.example.blog.dao.BlogDao;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class BlogService {
   private final BlogDao blogDao;
@@ -26,5 +29,15 @@ public class BlogService {
 
   public Boolean updateBlog(Integer id, String title, String content) {
     return blogDao.updateBlog(id, title, content) == 1;
+  }
+
+  public List<Blog> findBlogsByReplier(String replierName, Integer pageSize, Integer pageNo) {
+    Integer offset = (pageNo - 1) * pageSize;
+    return blogDao.findBlogsByReplier(replierName, offset, pageSize);
+  }
+
+  public List<Blog> findByDate(Date date, Integer pageSize, Integer pageNo) {
+    Integer offset = (pageNo - 1) * pageSize;
+    return blogDao.findBlogsByDate(date, offset, pageSize);
   }
 }

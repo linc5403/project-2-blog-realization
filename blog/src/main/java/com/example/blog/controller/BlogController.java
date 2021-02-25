@@ -3,12 +3,16 @@ package com.example.blog.controller;
 import com.example.blog.bean.Blog;
 import com.example.blog.bean.User;
 import com.example.blog.service.BlogService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/blog")
+@RequestMapping("/api")
 public class BlogController {
 
   private final BlogService blogService;
@@ -17,7 +21,7 @@ public class BlogController {
     this.blogService = blogService;
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("blog/{id}")
   ResponseEntity<?> getBlog(@PathVariable Integer id) {
 
     Blog blog = blogService.getBlogDetails(id);
@@ -28,7 +32,7 @@ public class BlogController {
     }
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("blog/{id}")
   ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
     // TODO: 删除需要判断权限
     var deleted = blogService.deleteBlogById(id);
@@ -40,7 +44,7 @@ public class BlogController {
     }
   }
 
-  @PostMapping
+  @PostMapping("/blog")
   ResponseEntity<?> postBlog(String content, String title, Integer userId) {
     // TODO: 发表需要登录
     User user = new User();
@@ -65,6 +69,28 @@ public class BlogController {
     } else {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
           .body(String.format("update blog %d failed", id));
+    }
+  }
+
+  @GetMapping("/blogs")
+  ResponseEntity<?> searchBlogs(
+      @RequestParam(required = false) String bloggerName,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date createdTime,
+      @RequestParam(defaultValue = "20") Integer pageSize,
+      @RequestParam(defaultValue = "1") Integer pageNo,
+      @RequestParam(required = false) String kwd,
+      @RequestParam(required = false) String replierName) {
+    List<Blog> blogs = null;
+    if (replierName != null) {
+      blogs = blogService.findBlogsByReplier(replierName, pageSize, pageNo);
+    } else if (createdTime != null) {
+      blogs = blogService.findByDate(createdTime, pageSize, pageNo);
+    }
+
+    if (blogs != null) {
+      return ResponseEntity.ok(blogs);
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("search failed");
     }
   }
 }
