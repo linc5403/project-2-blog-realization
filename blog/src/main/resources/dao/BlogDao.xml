@@ -31,7 +31,7 @@
     UPDATE blog
     SET title=#{title},
         content=#{content}
-    where id = #{id}
+    WHERE id = #{id}
   </update>
 
   <select id="getBlogById" resultMap="blogDetailsMap" parameterType="int">
@@ -58,6 +58,7 @@
            left join user as commenter on comment.user_id = commenter.id)
     where blog.id = #{id}
   </select>
+
   <select id="findBlogsByReplier" resultMap="blogSimpleMap">
     select blog.id,
            blog.title,
@@ -74,6 +75,7 @@
     order by id
     limit #{offset}, #{limit}
   </select>
+
   <select id="findBlogsByDate" resultMap="blogSimpleMap">
     select blog.id,
            blog.title,

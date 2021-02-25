@@ -1,7 +1,6 @@
 package com.example.blog.controller;
 
 import com.example.blog.bean.Blog;
-import com.example.blog.bean.User;
 import com.example.blog.service.BlogService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -45,14 +44,14 @@ public class BlogController {
   }
 
   @PostMapping("/blog")
-  ResponseEntity<?> postBlog(String content, String title, Integer userId) {
+  ResponseEntity<?> postBlog(@RequestBody Blog blog) {
     // TODO: 发表需要登录
-    User user = new User();
-    user.setId(userId);
-    var blog = new Blog();
-    blog.setAuthor(user);
-    blog.setContent(content);
-    blog.setTitle(title);
+    //    User user = new User();
+    //    user.setId(userId);
+    //    var blog = new Blog();
+    //    blog.setAuthor(user);
+    //    blog.setContent(content);
+    //    blog.setTitle(title);
     blogService.addBlog(blog);
     if (blog.getId() != null) {
       return ResponseEntity.ok(String.format("add %d blog success", blog.getId()));
