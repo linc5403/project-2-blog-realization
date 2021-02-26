@@ -1,9 +1,9 @@
 package com.example.blog.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.example.blog.bean.Blog;
 import com.example.blog.bean.User;
 import com.example.blog.service.BlogService;
+import com.example.blog.utils.MapperUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +36,7 @@ public class BlogController {
     if (blog == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such blog: " + id);
     } else {
-      blog.setTitle(null);
-      System.out.println(JSON.toJSON(blog));
-      return ResponseEntity.ok(blog);
+      return ResponseEntity.ok(MapperUtil.removeNullFields(blog));
     }
   }
 
@@ -57,14 +54,7 @@ public class BlogController {
 
   @PostMapping("/blog")
   ResponseEntity<?> postBlog(
-      /*@ApiParam("用户ID") @RequestParam Integer userId,
-      @ApiParam("博客标题") @RequestParam String title,
-      @ApiParam("博客内容") @RequestParam String content) {*/
-      @ApiParam Integer userId,
-      @ApiParam String title,
-      @ApiParam String content,
-      ServletRequest request) {
-    System.out.println(title + "....." + content + "...." + userId);
+      Integer userId, @ApiParam("博客标题") String title, @ApiParam("博客内容") String content) {
     // TODO: 发表需要登录
     User user = new User();
     user.setId(userId);

@@ -24,13 +24,16 @@ public class BlogApplication {
     var user2 = userDao.getUserById(2);
     log.debug(user2.toString());
     var blogDao = app.getBean(BlogDao.class);
-    var blog1 = blogDao.getBlogById(220);
+    var blog1 = blogDao.getBlogById(226);
     log.debug(blog1.toString());
     var blogs = blogDao.findBlogsByReplier("aa", 1, 2);
     System.out.println(blogs);
     blogs = blogDao.findBlogsByDate(new Date(), 0, 5);
     System.out.println(blogs.size());
     var mapper = MapperUtil.removeNullFields(blog1);
+    System.out.println(mapper);
+    blog1 = blogDao.getBlogById(220);
+    mapper = MapperUtil.removeNullFields(blog1);
     System.out.println(mapper);
 
     /*

@@ -22,9 +22,7 @@ public class MapperUtil {
           for (int i = 0; i < len; i++) {
             list.add(removeNullFields(Array.get(v, i)));
           }
-          if (list.size() == 0) {
-            return null;
-          } else {
+          if (list.size() != 0) {
             mapper.put(field.getName(), list);
           }
         } else if (List.class.isAssignableFrom(cls) || Set.class.isAssignableFrom(cls)) {
@@ -32,9 +30,7 @@ public class MapperUtil {
           for (var e : (Collection) v) {
             list.add(removeNullFields(e));
           }
-          if (list.size() == 0) {
-            return null;
-          } else {
+          if (list.size() != 0) {
             mapper.put(field.getName(), list);
           }
         } else if (Map.class.isAssignableFrom(cls)) {
@@ -42,9 +38,7 @@ public class MapperUtil {
           for (var key : ((Map) v).keySet()) {
             map.put(key.toString(), removeNullFields(v).get(key));
           }
-          if (map.size() == 0) {
-            return null;
-          } else {
+          if (map.size() != 0) {
             mapper.put(field.getName(), map);
           }
         } else if (cls.getClassLoader() == null) {
