@@ -2,6 +2,7 @@ package com.example.blog.controller;
 
 import com.example.blog.bean.Blog;
 import com.example.blog.service.BlogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,12 @@ public class BlogController {
 
   private final BlogService blogService;
 
+  @Autowired
   public BlogController(BlogService blogService) {
     this.blogService = blogService;
   }
 
-  @GetMapping("blog/{id}")
+  @GetMapping("/blog/{id}")
   ResponseEntity<?> getBlog(@PathVariable Integer id) throws IllegalAccessException {
 
     Blog blog = blogService.getBlogDetails(id);
@@ -31,7 +33,7 @@ public class BlogController {
     }
   }
 
-  @DeleteMapping("blog/{id}")
+  @DeleteMapping("/blog/{id}")
   ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
     // TODO: 删除需要判断权限
     var deleted = blogService.deleteBlogById(id);

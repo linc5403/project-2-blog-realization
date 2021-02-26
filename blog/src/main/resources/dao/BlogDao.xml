@@ -5,7 +5,7 @@
 <mapper namespace="com.example.blog.dao.BlogDao">
 
   <resultMap id="blogDetailsMap" type="com.example.blog.bean.Blog" autoMapping="true">
-    <id property="id" column="id"/>
+    <id property="id" column="blog_id"/>
     <association property="author" resultMap="com.example.blog.dao.UserDao.userSimpleMap"
                  columnPrefix="author_" autoMapping="true"/>
     <collection property="comments" resultMap="com.example.blog.dao.CommentDao.commentMap"
@@ -35,7 +35,7 @@
   </update>
 
   <select id="getBlogById" resultMap="blogDetailsMap" parameterType="int">
-    SELECT blog.id,
+    SELECT blog.id              as blog_id,
            blog.title,
            blog.content,
            blog.created_time,

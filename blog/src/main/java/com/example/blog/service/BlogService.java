@@ -5,9 +5,7 @@ import com.example.blog.dao.BlogDao;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class BlogService {
@@ -17,20 +15,8 @@ public class BlogService {
     this.blogDao = blogDao;
   }
 
-  public Blog getBlogDetails(Integer id) throws IllegalAccessException {
-    var blog = blogDao.getBlogById(id);
-    if (blog != null) {
-      //      ObjectMapper mapper = new ObjectMapper();
-      var fields = blog.getClass().getDeclaredFields();
-      Map<String, Object> mapper = new HashMap<>();
-      for (var field : fields) {
-        field.setAccessible(true);
-        if (field.get(blog) != null) {
-          mapper.put(field.getName(), field.get(blog));
-        }
-      }
-    }
-    return blog;
+  public Blog getBlogDetails(Integer id) {
+    return blogDao.getBlogById(id);
   }
 
   public Boolean deleteBlogById(Integer id) {
