@@ -1,5 +1,6 @@
 package com.example.blog.utils;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class MapperUtil {
@@ -15,8 +16,18 @@ public class MapperUtil {
         }
 
         var cls = v.getClass();
-        // List and set
-        if (List.class.isAssignableFrom(cls) || Set.class.isAssignableFrom(cls)) {
+        if (cls.isArray()) {
+          int len = Array.getLength(v);
+          var list = new ArrayList<Map<String, Object>>();
+          for (int i = 0; i < len; i++) {
+            list.add(removeNullFields(Array.get(v, i)));
+          }
+          if (list.size() == 0) {
+            return null;
+          } else {
+            mapper.put(field.getName(), list);
+          }
+        } else if (List.class.isAssignableFrom(cls) || Set.class.isAssignableFrom(cls)) {
           var list = new ArrayList<Map<String, Object>>();
           for (var e : (Collection) v) {
             list.add(removeNullFields(e));
@@ -29,7 +40,7 @@ public class MapperUtil {
         } else if (Map.class.isAssignableFrom(cls)) {
           var map = new HashMap<String, Object>();
           for (var key : ((Map) v).keySet()) {
-            map.put(key.toString(), removeNullFields((Map) v).get(key));
+            map.put(key.toString(), removeNullFields(v).get(key));
           }
           if (map.size() == 0) {
             return null;
