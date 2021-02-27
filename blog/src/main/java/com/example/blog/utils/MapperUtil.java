@@ -24,13 +24,11 @@ public class MapperUtil {
         for (int i = 0; i < len; i++) {
           var e = Array.get(o, i);
           if (!(isCustomizedClass(e) && mapper.get().contains(e))) {
-
+            if (isCustomizedClass(e)) mapper.get().add(e);
             var del = removeNullFields(e);
-
             if (del != null) {
               list.add(del);
             }
-            if (isCustomizedClass(e)) mapper.get().add(e);
           }
         }
         return list.size() == 0 ? null : list;

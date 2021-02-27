@@ -23,10 +23,7 @@ class MapperUtilTest {
     blogs[2].setTitle("222");
     blogs[3] = new Blog();
     blogs[3].setTitle("333");
-    Assertions.assertEquals(
-        "[{title=000}, {title=111}, {title=222}, {title=333}]",
-        MapperUtil.removeNullFields(blogs).toString());
-    System.out.println(MapperUtil.removeNullFields(blogs));
+    var out = MapperUtil.removeNullFields(blogs);
   }
 
   @Test
