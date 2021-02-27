@@ -1,7 +1,8 @@
 package com.example.blog;
 
-import com.example.blog.dao.BlogDao;
-import com.example.blog.dao.UserDao;
+import com.example.blog.bean.Blog;
+import com.example.blog.bean.Comment;
+import com.example.blog.bean.User;
 import com.example.blog.utils.MapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -9,7 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @SpringBootApplication
 @MapperScan
@@ -18,7 +20,7 @@ public class BlogApplication {
 
   public static void main(String[] args) throws ParseException, IllegalAccessException {
     var app = SpringApplication.run(BlogApplication.class, args);
-    var userDao = app.getBean(UserDao.class);
+    /*var userDao = app.getBean(UserDao.class);
     var user = userDao.getUserByName("王二");
     log.debug(user.toString());
     var user2 = userDao.getUserById(2);
@@ -34,18 +36,21 @@ public class BlogApplication {
     System.out.println(mapper);
     blog1 = blogDao.getBlogById(220);
     mapper = MapperUtil.removeNullFields(blog1);
-    System.out.println(mapper);
+    System.out.println(mapper);*/
 
-    /*
-    user.setUsername("liSi");
-    user.setEmail("liSi@abc.com");
-    Integer r = userDao.addUser(user);
-    log.info(r.toString());
-    log.info(user.toString());
-     */
-
-    //    List<Integer> ids = userDao.getRoleIdsByNames(Arrays.asList("User", "Admin"));
-    //    log.info(ids.toString());
-
+    Blog blog = new Blog();
+    blog.setTitle("abc");
+    User blogger = new User();
+    blogger.setUsername("张三");
+    Comment comment = new Comment();
+    comment.setCommenter(blogger);
+    comment.setContent("这是一个评论");
+    comment.setBlog(blog);
+    blog.setAuthor(blogger);
+    blog.setComments(new ArrayList<>(Collections.singletonList(comment)));
+    //    var s = JSON.toJSON(blog);
+    //    System.out.println(s);
+    var out = MapperUtil.removeNullFields(blog);
+    System.out.println(out);
   }
 }
