@@ -50,7 +50,7 @@ public class BlogApplication {
     blog.setComments(new ArrayList<>(Collections.singletonList(comment)));
     //    var s = JSON.toJSON(blog);
     //    System.out.println(s);
-    var out = MapperUtil.removeNullFields(blog);
+    var out = new MapperUtil().removeNullFields(blog);
     System.out.println(out);
   }
 }

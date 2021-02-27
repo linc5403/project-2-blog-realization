@@ -5,14 +5,11 @@ import java.util.*;
 
 public class MapperUtil {
 
-  private static Boolean isCustomizedClass(Object o) {
+  private Boolean isCustomizedClass(Object o) {
     return o != null && o.getClass().getClassLoader() != null;
   }
 
-  private static final ThreadLocal<Set<Object>> mapper = ThreadLocal.withInitial(HashSet::new);
-
-  @SuppressWarnings("rawtypes")
-  public static Object removeNullFields(Object o) throws IllegalAccessException {
+  private Object innerDel(Object o, Set<Object> set) throws IllegalAccessException {
     if (o != null) {
       // 1. 判断o的类型是否是Java类
       var clz = o.getClass();
@@ -23,9 +20,9 @@ public class MapperUtil {
         var list = new ArrayList<>();
         for (int i = 0; i < len; i++) {
           var e = Array.get(o, i);
-          if (!(isCustomizedClass(e) && mapper.get().contains(e))) {
-            if (isCustomizedClass(e)) mapper.get().add(e);
-            var del = removeNullFields(e);
+          if (!(isCustomizedClass(e) && set.contains(e))) {
+            if (isCustomizedClass(e)) set.add(e);
+            var del = innerDel(e, set);
             if (del != null) {
               list.add(del);
             }
@@ -38,9 +35,9 @@ public class MapperUtil {
       if (List.class.isAssignableFrom(clz) || Set.class.isAssignableFrom(clz)) {
         var list = new ArrayList<>();
         for (var e : (Collection) o) {
-          if (!(isCustomizedClass(e) && mapper.get().contains(e))) {
-            if (isCustomizedClass(e)) mapper.get().add(e);
-            var del = removeNullFields(e);
+          if (!(isCustomizedClass(e) && set.contains(e))) {
+            if (isCustomizedClass(e)) set.add(e);
+            var del = innerDel(e, set);
             if (del != null) {
               list.add(del);
             }
@@ -54,9 +51,9 @@ public class MapperUtil {
         var map = new HashMap<String, Object>();
         for (var key : ((Map) o).keySet()) {
           var v = ((Map) o).get(key);
-          if (!(isCustomizedClass(v) && mapper.get().contains(v))) {
-            if (isCustomizedClass(v)) mapper.get().add(v);
-            var del = removeNullFields(((Map) o).get(key));
+          if (!(isCustomizedClass(v) && set.contains(v))) {
+            if (isCustomizedClass(v)) set.add(v);
+            var del = innerDel(((Map) o).get(key), set);
             if (del != null) {
               map.put(key.toString(), del);
             }
@@ -75,12 +72,10 @@ public class MapperUtil {
         field.setAccessible(true);
         var v = field.get(o);
         if (v != null) {
-          if (!(isCustomizedClass(v) && mapper.get().contains(v))) {
-            var del = removeNullFields(v);
-            if (del != null) {
-              map.put(field.getName(), del);
-            }
-            if (isCustomizedClass(v)) mapper.get().add(v);
+          if (!(isCustomizedClass(v) && set.contains(v))) {
+            if (isCustomizedClass(v)) set.add(v);
+            var del = innerDel(v, set);
+            if (del != null) map.put(field.getName(), del);
           }
         }
       }
@@ -88,5 +83,11 @@ public class MapperUtil {
     } else {
       return null;
     }
+  }
+
+  public Object removeNullFields(Object o) throws IllegalAccessException {
+    // 每次被外面调用的时候都需要申请新的存储空间来过滤重复项
+    var set = new HashSet<>();
+    return innerDel(o, set);
   }
 }

@@ -36,7 +36,7 @@ public class BlogController {
     if (blog == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such blog: " + id);
     } else {
-      return ResponseEntity.ok(MapperUtil.removeNullFields(blog));
+      return ResponseEntity.ok(new MapperUtil().removeNullFields(blog));
     }
   }
 
