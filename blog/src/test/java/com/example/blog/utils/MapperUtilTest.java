@@ -21,16 +21,17 @@ class MapperUtilTest {
     blogs[2].setTitle("222");
     blogs[3] = new Blog();
     blogs[3].setTitle("333");
-    var out = new MapperUtil().removeNullFields(blogs);
+    var out = MapperUtil.removeNullFields(blogs);
     //    System.out.println(out);
     Assertions.assertEquals("[{title=000}, {title=111}, {title=222}, {title=333}]", out.toString());
+    System.out.println(MapperUtil.removeNullFields(blogs));
   }
 
   @Test
   public void testArray2() throws IllegalAccessException {
     var a = new int[10];
     for (int i = 0; i < 4; i++) a[i] = i;
-    var out = new MapperUtil().removeNullFields(a);
+    var out = MapperUtil.removeNullFields(a);
     for (int i = 0; i < 4; i++) Assertions.assertEquals(i, ((List) out).get(i));
   }
 
@@ -38,8 +39,8 @@ class MapperUtilTest {
   public void testPrimaryType() throws IllegalAccessException {
     var i = 1;
     var s = "abc";
-    Assertions.assertEquals(1, new MapperUtil().removeNullFields(i));
-    Assertions.assertEquals("abc", new MapperUtil().removeNullFields(s));
+    Assertions.assertEquals(1, MapperUtil.removeNullFields(i));
+    Assertions.assertEquals("abc", MapperUtil.removeNullFields(s));
   }
 
   @Test
@@ -56,7 +57,7 @@ class MapperUtilTest {
     blog.setComments(new ArrayList<>(Collections.singletonList(comment)));
     /*var s = JSON.toJSON(blog);
     System.out.println(s);*/
-    var out = new MapperUtil().removeNullFields(blog);
+    var out = MapperUtil.removeNullFields(blog);
     System.out.println(out);
   }
 

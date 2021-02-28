@@ -5,11 +5,11 @@ import java.util.*;
 
 public class MapperUtil {
 
-  private Boolean isCustomizedClass(Object o) {
+  private static Boolean isCustomizedClass(Object o) {
     return o != null && o.getClass().getClassLoader() != null;
   }
 
-  private Object innerDel(Object o, Set<Object> set) throws IllegalAccessException {
+  private static Object innerDel(Object o, Set<Object> set) throws IllegalAccessException {
     if (o != null) {
       // 1. 判断o的类型是否是Java类
       var clz = o.getClass();
@@ -85,7 +85,7 @@ public class MapperUtil {
     }
   }
 
-  public Object removeNullFields(Object o) throws IllegalAccessException {
+  public static Object removeNullFields(Object o) throws IllegalAccessException {
     // 每次被外面调用的时候都需要申请新的存储空间来过滤重复项
     var set = new HashSet<>();
     return innerDel(o, set);

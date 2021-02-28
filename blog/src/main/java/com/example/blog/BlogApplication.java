@@ -9,7 +9,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,7 +17,7 @@ import java.util.Collections;
 @Slf4j
 public class BlogApplication {
 
-  public static void main(String[] args) throws ParseException, IllegalAccessException {
+  public static void main(String[] args) throws IllegalAccessException {
     var app = SpringApplication.run(BlogApplication.class, args);
     /*var userDao = app.getBean(UserDao.class);
     var user = userDao.getUserByName("王二");
@@ -50,7 +49,7 @@ public class BlogApplication {
     blog.setComments(new ArrayList<>(Collections.singletonList(comment)));
     //    var s = JSON.toJSON(blog);
     //    System.out.println(s);
-    var out = new MapperUtil().removeNullFields(blog);
+    var out = MapperUtil.removeNullFields(blog);
     System.out.println(out);
   }
 }
