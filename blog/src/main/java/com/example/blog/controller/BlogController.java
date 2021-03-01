@@ -1,8 +1,8 @@
 package com.example.blog.controller;
 
 import com.example.blog.bean.Blog;
-import com.example.blog.bean.User;
 import com.example.blog.service.BlogService;
+import com.example.blog.service.UserService;
 import com.example.blog.utils.MapperUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +22,12 @@ import java.util.List;
 @RequestMapping("/api")
 public class BlogController {
 
+  private final UserService userService;
   private final BlogService blogService;
 
   @Autowired
-  public BlogController(BlogService blogService) {
+  public BlogController(UserService userService, BlogService blogService) {
+    this.userService = userService;
     this.blogService = blogService;
   }
 
@@ -36,7 +39,7 @@ public class BlogController {
     if (blog == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such blog: " + id);
     } else {
-      return ResponseEntity.ok(new MapperUtil().removeNullFields(blog));
+      return ResponseEntity.ok(MapperUtil.removeNullFields(blog));
     }
   }
 
@@ -54,10 +57,12 @@ public class BlogController {
 
   @PostMapping("/blog")
   ResponseEntity<?> postBlog(
-      Integer userId, @ApiParam("博客标题") String title, @ApiParam("博客内容") String content) {
+      @ApiParam("博客标题") String title,
+      @ApiParam("博客内容") String content,
+      Principal principal) {
     // TODO: 发表需要登录
-    User user = new User();
-    user.setId(userId);
+    String userName = principal.getName();
+    var user = userService.getUserByName(userName);
     var blog = new Blog();
     blog.setAuthor(user);
     blog.setContent(content);
