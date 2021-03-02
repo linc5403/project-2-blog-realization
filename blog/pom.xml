@@ -83,7 +83,16 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.75</version>
     </dependency>
+
+    <!--    JWT-->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.13.0</version>
+    </dependency>
+
   </dependencies>
+
 
   <build>
     <plugins>

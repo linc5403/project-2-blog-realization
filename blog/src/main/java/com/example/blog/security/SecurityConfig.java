@@ -1,4 +1,4 @@
-package com.example.blog.config;
+package com.example.blog.security;
 
 import com.example.blog.bean.User;
 import com.example.blog.service.UserService;
@@ -6,9 +6,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,22 +26,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-//    http.formLogin();
+    //    http.formLogin();
     http.csrf().disable();
-    http.httpBasic();
+    http.httpBasic().disable();
 
     http.authorizeRequests().antMatchers("/api/admin/**").hasRole("ADMIN");
     http.authorizeRequests().antMatchers("/api/**").hasAuthority("ROLE_USER");
+
+    http.addFilterBefore(
+        new JwtAuthenticationFilter(authenticationManager()),
+        UsernamePasswordAuthenticationFilter.class);
+
+    http.addFilter(new JwtTokenProcessFilter(authenticationManager()));
+
+    http.exceptionHandling()
+        .authenticationEntryPoint(
+            (request, response, authException) -> response.getWriter().write("401"));
+    http.exceptionHandling()
+        .accessDeniedHandler(
+            (request, response, accessDeniedException) ->
+                accessDeniedException.getCause().getCause());
+
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().withUser("aaa").password("{noop}asdf").roles("USER");
-    auth.userDetailsService(username -> {
-      User user = userService.getUserByName(username);
-      // 根据自定义的user对象生成UserDetails对象
-      return new UserDetailsImp(user);
-    }).passwordEncoder(NoOpPasswordEncoder.getInstance());
+    auth.inMemoryAuthentication().withUser("aaa").password("{noop}abc").roles("USER");
+    auth.userDetailsService(
+            username -> {
+              User user = userService.getUserByName(username);
+              // 根据自定义的user对象生成UserDetails对象
+              return new UserDetailsImp(user);
+            })
+        .passwordEncoder(NoOpPasswordEncoder.getInstance());
   }
 }
 
