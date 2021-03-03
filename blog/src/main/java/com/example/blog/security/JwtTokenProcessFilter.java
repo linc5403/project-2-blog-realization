@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class JwtTokenProcessFilter extends BasicAuthenticationFilter {
   public JwtTokenProcessFilter(AuthenticationManager authenticationManager) {
     super(authenticationManager);
@@ -42,7 +44,7 @@ public class JwtTokenProcessFilter extends BasicAuthenticationFilter {
         jwt = verifier.verify(token);
       } catch (JWTVerificationException exception) {
         // Invalid signature/claims
-        System.out.println("!!!!!!校验不通过");
+        log.info("jwt校验未通过");
       }
 
       if (jwt != null) {
@@ -54,8 +56,6 @@ public class JwtTokenProcessFilter extends BasicAuthenticationFilter {
           return;
         }
 
-        System.out.println("username: " + username);
-        System.out.println("roles" + roles);
         // 生成Authentication对象，放入SecurityContext
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (var role : roles) {

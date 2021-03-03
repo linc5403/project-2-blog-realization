@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           JWT.create()
               .withClaim("username", username)
               .withClaim("roles", roles)
-              .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000 * 5))
+              .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000 * 12))
               .sign(algorithm);
     } catch (JWTCreationException exception) {
       System.out.println(exception.toString());

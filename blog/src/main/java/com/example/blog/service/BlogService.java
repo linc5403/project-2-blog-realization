@@ -2,6 +2,8 @@ package com.example.blog.service;
 
 import com.example.blog.bean.Blog;
 import com.example.blog.dao.BlogDao;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,10 +17,13 @@ public class BlogService {
     this.blogDao = blogDao;
   }
 
+  @Cacheable(value = "blog")
   public Blog getBlogDetails(Integer id) {
+    System.out.println("!!!!!! in getBlogDetails process");
     return blogDao.getBlogById(id);
   }
 
+  @CacheEvict(value = "blog")
   public Boolean deleteBlogById(Integer id) {
     return blogDao.deleteBlogById(id) == 1;
   }
@@ -27,6 +32,7 @@ public class BlogService {
     blogDao.addBlog(blog);
   }
 
+  @CacheEvict(value = "blog", key = "#id")
   public Boolean updateBlog(Integer id, String title, String content) {
     return blogDao.updateBlog(id, title, content) == 1;
   }

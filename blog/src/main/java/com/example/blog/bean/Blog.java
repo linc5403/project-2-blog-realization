@@ -3,12 +3,13 @@ package com.example.blog.bean;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Data
-public class Blog {
+public class Blog implements Serializable {
   private Integer id;
   private String title;
   private String content;
