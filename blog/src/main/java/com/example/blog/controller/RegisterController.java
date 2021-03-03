@@ -3,6 +3,7 @@ package com.example.blog.controller;
 import com.example.blog.bean.RegisterEvent;
 import com.example.blog.bean.User;
 import com.example.blog.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 @RestController
+@Slf4j
 public class RegisterController {
 
   private final UserService userService;
@@ -34,15 +36,17 @@ public class RegisterController {
     user.setActivated(false);
 
     // 注册用户的接口统一加上User的角色
-    user.setRoles(Collections.singletonList("User"));
+    user.setRoles(Collections.singletonList("USER"));
 
     Boolean r = userService.addUser(user);
     if (r) {
+      // 构造事件
+      RegisterEvent registerEvent = new RegisterEvent(this, user);
+      // 通知观察者
+      log.info(Thread.currentThread().getName() + ": publish event!!!!!!");
+      publisher.publishEvent(registerEvent);
       return ResponseEntity.ok("OK");
     } else {
-      // 通知用户注册的事件
-      RegisterEvent registerEvent = new RegisterEvent(this, user);
-      publisher.publishEvent(registerEvent);
       // 应该返回更为详细的原因
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("用户名或电子邮件已存在");
     }

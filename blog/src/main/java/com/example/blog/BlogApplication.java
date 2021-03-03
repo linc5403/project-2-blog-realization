@@ -8,6 +8,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @MapperScan
 @Slf4j
 @EnableCaching
+@EnableAsync
 public class BlogApplication {
 
   public static void main(String[] args) throws IllegalAccessException {
