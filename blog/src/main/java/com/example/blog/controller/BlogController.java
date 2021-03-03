@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +26,42 @@ public class BlogController {
 
   private final UserService userService;
   private final BlogService blogService;
+  //  private final StringRedisTemplate stringRedisTemplate;
+  private final RedisTemplate<String, Object> redisTemplate;
 
   @Autowired
-  public BlogController(UserService userService, BlogService blogService) {
+  public BlogController(
+      UserService userService,
+      BlogService blogService,
+      StringRedisTemplate stringRedisTemplate,
+      RedisTemplate<String, Object> redisTemplate) {
     this.userService = userService;
     this.blogService = blogService;
+    this.redisTemplate = redisTemplate;
+    //    this.stringRedisTemplate = stringRedisTemplate;
   }
 
   @GetMapping("/blog/{id}")
   ResponseEntity<?> getBlog(@PathVariable Integer id) throws IllegalAccessException {
 
-    Blog blog = blogService.getBlogDetails(id);
+    var ops = redisTemplate.boundValueOps("blog-" + id);
+    //    var ops = stringRedisTemplate.boundValueOps("blog|" + id);
+    var blog = (Blog) ops.get();
+
+    /*if (strBlog != null) {
+      // 反序列化出blog对象
+      blog = JSON.parseObject(strBlog, Blog.class);
+    } else {
+      // redis里面没有这个blog对象
+      blog = blogService.getBlogDetails(id);
+      // 将blog对象序列号后放入cache
+      if (blog != null) ops.set(JSON.toJSONString(blog));
+    }*/
+    if (blog == null) {
+      // cache 里面没有
+      blog = blogService.getBlogDetails(id);
+      if (blog != null) ops.set(blog);
+    }
 
     if (blog == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such blog: " + id);
@@ -57,9 +84,7 @@ public class BlogController {
 
   @PostMapping("/blog")
   ResponseEntity<?> postBlog(
-      @ApiParam("博客标题") String title,
-      @ApiParam("博客内容") String content,
-      Principal principal) {
+      @ApiParam("博客标题") String title, @ApiParam("博客内容") String content, Principal principal) {
     // TODO: 发表需要登录
     String userName = principal.getName();
     var user = userService.getUserByName(userName);

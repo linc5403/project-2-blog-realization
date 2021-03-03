@@ -4,6 +4,7 @@ import com.example.blog.bean.Blog;
 import com.example.blog.dao.BlogDao;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -12,9 +13,11 @@ import java.util.List;
 @Service
 public class BlogService {
   private final BlogDao blogDao;
+  private final StringRedisTemplate stringRedisTemplate;
 
-  public BlogService(BlogDao blogDao) {
+  public BlogService(BlogDao blogDao, StringRedisTemplate redisTemplate) {
     this.blogDao = blogDao;
+    this.stringRedisTemplate = redisTemplate;
   }
 
   @Cacheable(value = "blog")
@@ -23,7 +26,7 @@ public class BlogService {
     return blogDao.getBlogById(id);
   }
 
-  @CacheEvict(value = "blog")
+  @CacheEvict("blog")
   public Boolean deleteBlogById(Integer id) {
     return blogDao.deleteBlogById(id) == 1;
   }
